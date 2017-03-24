@@ -9,6 +9,7 @@ These scripts are mainly meant to fix style rather than correctness.
 The style issues are mainly those imposed by the [Airbnb JavaScript style guide](airbnb) that were unable to be fixed by `eslint --fix` in the `bulk-decaffeinate` process.
 These scripts are operating on files run with decaffeinate's `--keep-commonjs` and `--prefer-const` flags on.
 
+
 ### `fix-multi-assign-class-export`
 
 #### CoffeeScript source
@@ -28,6 +29,37 @@ module.exports = Foo = class Foo {};
 
 ```javascript
 module.exports = class Foo {};
+```
+
+
+### `fix-implicit-return-assignment`
+
+#### CoffeeScript source
+
+```coffeescript
+class Foo
+  setBar: (bar) ->
+    this.bar = 42
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+class Foo {
+  setBar(bar) {
+    return this.bar = 42;
+  }
+}
+```
+
+#### Fixed JavaScript
+
+```javascript
+class Foo {
+  setBar(bar) {
+    this.bar = 42;
+  }
+}
 ```
 
 
