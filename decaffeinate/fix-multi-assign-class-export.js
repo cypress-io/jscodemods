@@ -15,7 +15,7 @@
 
 const assert = require('assert');
 
-module.exports = function test(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api, options) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
