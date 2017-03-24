@@ -20,6 +20,8 @@ module.exports = function test(fileInfo, api, options) {
   const j = api.jscodeshift;
   const root = j(src);
 
+  const { comments } = root.find(j.Program).get('body', 0).node;
+
   const multiAssignClassExports = findMultiAssignClassExports(j, root);
   if (multiAssignClassExports.length === 0) return;
 
@@ -29,6 +31,9 @@ module.exports = function test(fileInfo, api, options) {
   multiAssignClassExports.forEach(({value}) => {
     fixMultiAssignExport(j, root, value);
   });
+
+  // Retain leading comments
+  root.get().node.comments = comments;
   return root.toSource();
 };
 
