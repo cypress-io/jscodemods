@@ -65,7 +65,7 @@ function removeVariableDeclarationForIdentifier(j, root, identifier) {
   root
     .find(j.VariableDeclaration)
     .filter(({value}) => isVariableDeclarationForIdentifier(value, identifier))
-    .replaceWith(() => null);
+    .replaceWith(null);
   return root;
 }
 
