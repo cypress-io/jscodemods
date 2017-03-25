@@ -63,6 +63,28 @@ class Foo {
 ```
 
 
+### `fix-existential-conditional-assignment`
+
+#### CoffeeScript source
+
+```coffeescript
+bar = foo() ? ''
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+let left;
+const bar = (left = foo()) != null ? left : '';
+```
+
+#### Fixed JavaScript
+
+```javascript
+const bar = foo() || '';
+```
+
+
 <!-- Links -->
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
