@@ -39,9 +39,21 @@ function replaceExistentialAssignmentWithLogicalOr(j, {value}) {
 
 function removeVariableDeclarations(existentialAssignments) {
   const declarators = existentialAssignments.getVariableDeclarators(getLeftIdentifier);
-  const declarations = declarators.map(path => path.parent)
+  const declarations = declarators.map(path => path.parent);
+  // Avoid losing comments that are on the declaration.
+  transposeLeadingComments(declarations);
   // Assumption: declarations only contain declarators that should be removed.
   declarations.replaceWith(null);
+}
+
+function transposeLeadingComments(declarations) {
+  declarations.forEach((path) => {
+    const parent = path.parent;
+    const parentBody = parent.node.body;
+    const indexOfDeclaration = parentBody.indexOf(path.value);
+    const indexOfSubsequentStatement = indexOfDeclaration + 1;
+    parentBody[indexOfSubsequentStatement].comments = path.node.comments;
+  });
 }
 
 function getLeftIdentifier({value}) {
