@@ -11,7 +11,7 @@ module.exports = function transform(fileInfo, api, options) {
   const j = api.jscodeshift;
   const root = j(src);
 
-  const implicitReturns = root
+  root
     .find(j.ReturnStatement)
     .filter(isImplicitReturnOfAssignment)
     .replaceWith(({value}) => fixImplicitReturnOfAssignment(j, value));
