@@ -85,6 +85,32 @@ const bar = foo() || '';
 ```
 
 
+### `fix-for-of-statement`
+
+#### CoffeeScript source
+
+```coffeescript
+for x in [1, 2, 3, 4, 5]
+  console.log(x)
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+for (let x of [1, 2, 3, 4, 5]) {
+  console.log(x);
+}
+```
+
+#### Fixed JavaScript
+
+```javascript
+[1, 2, 3, 4, 5].forEach((x) => {
+  console.log(x);
+});
+```
+
+
 <!-- Links -->
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
