@@ -91,6 +91,7 @@ const bar = foo() || '';
 
 ```coffeescript
 for x in [1, 2, 3, 4, 5]
+  continue if x % 2 == 0
   console.log(x)
 ```
 
@@ -98,6 +99,7 @@ for x in [1, 2, 3, 4, 5]
 
 ```javascript
 for (let x of [1, 2, 3, 4, 5]) {
+  if ((x % 2) === 0) { continue; }
   console.log(x);
 }
 ```
@@ -106,6 +108,9 @@ for (let x of [1, 2, 3, 4, 5]) {
 
 ```javascript
 [1, 2, 3, 4, 5].forEach((x) => {
+  if ((x % 2) === 0) {
+    return;
+  }
   console.log(x);
 });
 ```

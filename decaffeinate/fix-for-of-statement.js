@@ -33,9 +33,16 @@ function forOfToForEach(j, path) {
       [iteratee]
     )
   );
+  replaceContinueStatementsWithReturns(j, path);
   // Retain comments
   forEachExpression.comments = forOf.comments;
   return forEachExpression;
+}
+
+function replaceContinueStatementsWithReturns(j, forOfPath) {
+  j(forOfPath)
+    .find(j.ContinueStatement)
+    .replaceWith(j.returnStatement(null));
 }
 
 function removeVariableDeclarations(forOfStatement) {
