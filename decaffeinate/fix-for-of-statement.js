@@ -7,7 +7,10 @@ module.exports = function transform(fileInfo, api, options) {
   const j = api.jscodeshift;
   const root = j(src);
 
-  const forOfStatements = root.find(j.ForOfStatement);
+  const forOfStatements = root
+    .find(j.ForOfStatement)
+    // Don't support break
+    .filter(path => j(path).find(j.BreakStatement).length === 0);
   removeVariableDeclarations(forOfStatements);
   forOfStatements.replaceWith(path => forOfToForEach(j, path));
 
