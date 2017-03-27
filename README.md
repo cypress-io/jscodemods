@@ -89,7 +89,7 @@ const bar = foo() || '';
 
 #### CoffeeScript source
 
-Note: This will skip over any `for..of` statements that contain a `break` since it cannot easily be converted into a `forEach`.
+Note: This will skip over any `for..of` statements that contain a `break` or `return` since it cannot easily be converted into a `forEach`.
 
 ```coffeescript
 for x in [1, 2, 3, 4, 5]

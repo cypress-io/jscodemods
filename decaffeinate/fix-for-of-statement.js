@@ -9,8 +9,9 @@ module.exports = function transform(fileInfo, api, options) {
 
   const forOfStatements = root
     .find(j.ForOfStatement)
-    // Don't support break
-    .filter(path => j(path).find(j.BreakStatement).length === 0);
+    // Don't support break or return
+    .filter(path => j(path).find(j.BreakStatement).length === 0)
+    .filter(path => j(path).find(j.ReturnStatement).length === 0);
   removeVariableDeclarations(forOfStatements);
   forOfStatements.replaceWith(path => forOfToForEach(j, path));
 
