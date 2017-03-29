@@ -21,7 +21,7 @@ module.exports = function transform(fileInfo, api, options) {
 
 function isImplicitReturnOfAssignment(path) {
   const returnStatement = path.value;
-  const isReturningAnAssignment = returnStatement.argument.type === "AssignmentExpression";
+  const isReturningAnAssignment = returnStatement.argument && returnStatement.argument.type === "AssignmentExpression";
   return isReturningAnAssignment && isLastStatement(path);
 }
 
