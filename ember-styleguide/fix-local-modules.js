@@ -54,6 +54,13 @@ module.exports = function fixLocalModules(fileInfo, api) {
 };
 
 function isEmberModule(path) {
+  const parentType = path.parent.value.type;
+  if (!(parentType === 'CallExpression' || parentType === 'MemberExpression')) {
+    // Only support Ember.get() or Ember.inject.service()
+    // Don't accidentally replace assignments (e.g. Ember.MODEL_FACTORY_INJECTIONS = true)
+    return false;
+  }
+
   const memberExpression = path.value;
   const memberObject = memberExpression.object;
   if (memberObject.type !== 'Identifier') return false;
