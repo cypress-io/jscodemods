@@ -118,8 +118,39 @@ for (let x of [1, 2, 3, 4, 5]) {
 ```
 
 
+## `ember-styleguide`
+
+Tranformation scripts in the `ember-styleguide` directory are scripts meant to be run on ES6 ember-cli code.
+These scripts are mainly meant to fix style rather than correctness.
+The style issues are mainly those imposed by the [NetGuru Ember Style Guide](netguru).
+
+### `fix-local-modules`
+
+#### Original JavaScript
+
+```javascript
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  foo: Ember.computed(function() {}),
+});
+```
+
+#### Fixed JavaScript
+
+```javascript
+import Ember from 'ember';
+
+const {Component, computed} = Ember;
+
+export default Component.extend({
+  foo: computed(function() {}),
+});
+```
+
 <!-- Links -->
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
 [airbnb]: https://github.com/airbnb/javascript
+[netguru]: https://github.com/netguru/eslint-plugin-ember/blob/master/docs/RULES.md
 
