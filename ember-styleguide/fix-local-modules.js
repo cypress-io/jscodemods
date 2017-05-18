@@ -40,7 +40,9 @@ module.exports = function fixLocalModules(fileInfo, api) {
   emberModules.replaceWith(replaceEmberModule);
 
   // Add declaration `const {get, set} = Ember;`
-  const newLocalModuleDeclaration = getEmberLocalModuleDeclaration(j, emberModuleNames);
+  const existingModuleNames = getModuleNames(localModuleDeclaration);
+  const allModuleNames = uniqueAndSort(existingModuleNames.concat(emberModuleNames));
+  const newLocalModuleDeclaration = getEmberLocalModuleDeclaration(j, allModuleNames);
   if (localModuleDeclaration) {
     localModuleDeclaration.replace(newLocalModuleDeclaration);
   } else {
@@ -77,9 +79,13 @@ function collectEmberModules(emberModules) {
   const moduleNames = paths.map(({value}) =>
     value.property.name
   );
-  const uniqueModuleNames = Array.from(new Set(moduleNames));
-  const sortedModuleNames = uniqueModuleNames.sort((a, b) => a - b);
-  return sortedModuleNames;
+  return uniqueAndSort(moduleNames);
+}
+
+function uniqueAndSort(strings) {
+  const uniqueStrings = Array.from(new Set(strings));
+  const sortedStrings = uniqueStrings.sort((a, b) => a - b);
+  return sortedStrings;
 }
 
 function isLocalModuleDeclaration({value}) {
@@ -92,6 +98,14 @@ function isLocalModuleDeclaration({value}) {
   // Only handle single declarations
   assert(declarations.length === 1);
   return true;
+}
+
+function getModuleNames(localModuleDeclaration) {
+  if (!localModuleDeclaration) return [];
+  const {declarations} = localModuleDeclaration.value;
+  const declarator = declarations[0];
+  const properties = declarator.id.properties;
+  return properties.map(property => property.key.name);
 }
 
 function replaceEmberModule({value}) {
