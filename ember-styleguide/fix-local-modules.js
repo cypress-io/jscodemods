@@ -65,6 +65,10 @@ function isEmberModule(path) {
   const memberObject = memberExpression.object;
   if (memberObject.type !== 'Identifier') return false;
   if (memberObject.name !== 'Ember') return false;
+  // Take some precautions to not overwrite certain keywords.
+  const allowedEmberProperties = ['$', 'Object', 'Router', 'String'];
+  const memberProperty = memberExpression.property;
+  if (memberProperty.type === 'Identifier' && allowedEmberProperties.indexOf(memberProperty.name) !== -1) return false;
   return true;
 }
 
