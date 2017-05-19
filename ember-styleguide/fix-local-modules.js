@@ -84,7 +84,7 @@ function collectEmberModules(emberModules) {
 
 function uniqueAndSort(strings) {
   const uniqueStrings = Array.from(new Set(strings));
-  const sortedStrings = uniqueStrings.sort((a, b) => a - b);
+  const sortedStrings = uniqueStrings.sort();
   return sortedStrings;
 }
 
