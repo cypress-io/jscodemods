@@ -148,6 +148,32 @@ export default Component.extend({
 });
 ```
 
+### `fix-get-set`
+
+#### Original JavaScript
+
+```javascript
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  foo: Ember.computed('bar', function() {
+    return this.get('bar');
+  }),
+});
+```
+
+#### Fixed JavaScript
+
+```javascript
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  foo: Ember.computed('bar', function() {
+    return get(this, 'bar');
+  }),
+});
+```
+
 <!-- Links -->
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
