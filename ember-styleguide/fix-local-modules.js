@@ -18,7 +18,7 @@
  *  });
  */
 
-const assert = require('assert');
+const utils = require('./utils');
 
 module.exports = function fixLocalModules(fileInfo, api) {
   const src = fileInfo.source;
@@ -28,9 +28,6 @@ module.exports = function fixLocalModules(fileInfo, api) {
   const emberModules = root.find(j.MemberExpression)
     .filter(isEmberModule);
   const emberModuleNames = collectEmberModules(emberModules);
-  const localModuleDeclaration = root.find(j.VariableDeclaration)
-    .filter(isLocalModuleDeclaration)
-    .paths()[0];
 
   if (emberModuleNames.length === 0) {
     return; // no occurrences, we're okay
@@ -40,17 +37,7 @@ module.exports = function fixLocalModules(fileInfo, api) {
   emberModules.replaceWith(replaceEmberModule);
 
   // Add declaration `const {get, set} = Ember;`
-  const existingModuleNames = getModuleNames(localModuleDeclaration);
-  const allModuleNames = uniqueAndSort(existingModuleNames.concat(emberModuleNames));
-  const newLocalModuleDeclaration = getEmberLocalModuleDeclaration(j, allModuleNames);
-  if (localModuleDeclaration) {
-    localModuleDeclaration.replace(newLocalModuleDeclaration);
-  } else {
-    // Insert after last import if there wasn't a declaration already
-    root.find(j.ImportDeclaration)
-      .at(-1)
-      .insertAfter(newLocalModuleDeclaration);
-  }
+  utils.upsertLocalModuleDeclaration(j, root, emberModuleNames);
 
   return root.toSource();
 };
@@ -79,48 +66,9 @@ function collectEmberModules(emberModules) {
   const moduleNames = paths.map(({value}) =>
     value.property.name
   );
-  return uniqueAndSort(moduleNames);
-}
-
-function uniqueAndSort(strings) {
-  const uniqueStrings = Array.from(new Set(strings));
-  const sortedStrings = uniqueStrings.sort();
-  return sortedStrings;
-}
-
-function isLocalModuleDeclaration({value}) {
-  const {declarations} = value;
-  const declarator = declarations[0];
-  if (!declarator) return false;
-  if (declarator.id.type !== 'ObjectPattern') return false;
-  if (declarator.init.type !== 'Identifier') return false;
-  if (declarator.init.name !== 'Ember') return false;
-  // Only handle single declarations
-  assert(declarations.length === 1);
-  return true;
-}
-
-function getModuleNames(localModuleDeclaration) {
-  if (!localModuleDeclaration) return [];
-  const {declarations} = localModuleDeclaration.value;
-  const declarator = declarations[0];
-  const properties = declarator.id.properties;
-  return properties.map(property => property.key.name);
+  return utils.uniqueAndSort(moduleNames);
 }
 
 function replaceEmberModule({value}) {
   return value.property;
-}
-
-function getEmberLocalModuleDeclaration(j, moduleNames) {
-  const properties = moduleNames.map((name) => {
-    const id = j.identifier(name);
-    const property = j.property('init', id, id);
-    property.shorthand = true;
-    return property;
-  });
-  const declarations = [
-    j.variableDeclarator(j.objectPattern(properties), j.identifier('Ember')),
-  ];
-  return j.variableDeclaration('const', declarations);
 }
