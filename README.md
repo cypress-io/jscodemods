@@ -167,6 +167,8 @@ export default Ember.Component.extend({
 ```javascript
 import Ember from 'ember';
 
+const {get} = Ember;
+
 export default Ember.Component.extend({
   foo: Ember.computed('bar', function() {
     return get(this, 'bar');
