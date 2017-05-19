@@ -1,3 +1,29 @@
+/**
+ * Use Ember.get and Ember.set instead of calling them on the objects
+ * themselves. This is to avoid having to remember which objects are actually
+ * Ember objects.
+ * https://github.com/netguru/eslint-plugin-ember/blob/master/docs/rules/use-ember-get-and-set.md
+ *
+ * Old code like:
+ *  import Ember from 'ember';
+ *  export default Ember.Component.extend({
+ *    foo: Ember.computed('bar', function() {
+ *      return this.get('bar');
+ *    }),
+ *  });
+ *
+ * results in:
+ *  import Ember from 'ember';
+ *
+ *  const {get} = Ember;
+ *
+ *  export default Ember.Component.extend({
+ *    foo: Ember.computed('bar', function() {
+ *      return get(this, 'bar');
+ *    }),
+ *  });
+ */
+
 const utils = require('./utils');
 
 const AVOIDED_PROPERTIES = [

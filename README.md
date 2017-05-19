@@ -148,7 +148,7 @@ export default Component.extend({
 });
 ```
 
-### `fix-get-set`
+### `fix-use-ember-get-and-set`
 
 #### Original JavaScript
 
