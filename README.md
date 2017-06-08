@@ -117,6 +117,41 @@ for (let x of [1, 2, 3, 4, 5]) {
 });
 ```
 
+### `remove-coffeelint-directives`
+
+#### CoffeeScript source
+
+```coffeescript
+describe('SearchListService', () =>
+  # declare queryBuilderObj
+  ### coffeelint-variable-scope-ignore ###
+  queryBuilderObj = null
+  # ...
+)
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+describe('SearchListService', () => {
+  // declare queryBuilderObj
+  /* coffeelint-variable-scope-ignore */
+  let queryBuilderObj;
+  return queryBuilderObj = null;
+  // ...
+});
+```
+
+#### Fixed JavaScript
+
+```javascript
+describe('SearchListService', () => {
+  // declare queryBuilderObj
+  let queryBuilderObj;
+  return queryBuilderObj = null;
+  // ...
+});
+```
 
 ## `ember-styleguide`
 
