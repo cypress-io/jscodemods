@@ -176,6 +176,16 @@ export default Ember.Component.extend({
 });
 ```
 
+## `transforms`
+
+These are some miscellaneous transforms.
+
+### `use-strict`
+
+Adds a top-level 'use strict' statement to JavaScript files
+
+Borrowed from [cpojer/jscodemod](https://github.com/cpojer/js-codemod);
+
 <!-- Links -->
 [jscodeshift]: https://github.com/facebook/jscodeshift
 [decaffeinate]: https://github.com/decaffeinate/decaffeinate
