@@ -7,7 +7,7 @@ export default function fixClassAssignmentWithConstructors(fileInfo, api) {
     .filter(isClassAssign)
     .forEach(path => transformClassAssignmentAndConstructions(j, root, path));
 
-  return root.toSource().replace(/\(START_(.*)_END\)/g, '$1');
+  return root.toSource().replace(/\(?START_(.*)_END\)?/g, '$1');
 }
 
 function isClassAssign(path) {
