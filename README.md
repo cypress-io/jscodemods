@@ -32,6 +32,30 @@ module.exports = class Foo {};
 ```
 
 
+### `fix-class-assign-construct`
+
+#### CoffeeScript source
+
+```coffeescript
+module.exports = class Foo
+
+new Foo()
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+let Foo;
+module.exports = Foo = class Foo {};
+```
+
+#### Fixed JavaScript
+
+```javascript
+module.exports = class Foo {};
+```
+
+
 ### `fix-implicit-return-assignment`
 
 #### CoffeeScript source
@@ -215,9 +239,35 @@ export default Ember.Component.extend({
 
 These are some miscellaneous transforms.
 
+### `fix-class-assign-construct`
+
+This should be run if you have classes that are assigned to some identifier and then the identifier is used in the file to construct the class.
+
+#### Original JavaScript
+
+```javascript
+module.exports = (class FooScript { });
+
+if (!module.parent) {
+  const script = new module.exports();
+}
+```
+
+#### Fixed JavaScript
+
+```javascript
+class FooScript { };
+module.exports = FooScript;
+
+if (!module.parent) {
+  const script = new FooScript();
+}
+```
+
 ### `use-strict`
 
-Adds a top-level 'use strict' statement to JavaScript files
+Adds a top-level 'use strict' statement to JavaScript files.
+If you are doing this with bulk-decaffeinate, you should run `eslint --fix` afterwards since bulk-decaffeinate puts a comment directly before the `'use strict';` directive.
 
 Borrowed from [cpojer/jscodemod](https://github.com/cpojer/js-codemod);
 
