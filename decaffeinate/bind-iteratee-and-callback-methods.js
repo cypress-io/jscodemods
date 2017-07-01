@@ -175,23 +175,13 @@ function _transform(j, root) {
   // Fix unbound methods that are assigned to variables
   possibleUnboundFunctions
     .filter(({node}) => node.type === 'Identifier')
-    .forEach((idPath) => {
-      // post-declaration, initialized variables
-      const initializationValues = j(idPath)
-        .closestScope()
-        .find(j.AssignmentExpression)
-        .filter(({node}) => node.left.type === 'Identifier' && node.left.name === idPath.node.name)
-        .map(assignmentPath => assignmentPath.get('right'));
-      replaceUnboundMethodsWithBoundMethods(j, initializationValues);
+    .forEach(path => fixVariableInitializedToUnboundMethods(j, path));
 
-      // variable declarators with initialization
-      const variableDeclaratorInitValues = j(idPath)
-        .closestScope()
-        .find(j.VariableDeclarator)
-        .filter(({node}) => node.id.type === 'Identifier' && node.id.name === idPath.node.name)
-        .map(declaratorPath => declaratorPath.get('init'));
-      replaceUnboundMethodsWithBoundMethods(j, variableDeclaratorInitValues);
-    });
+  // Variables called as functions
+  root.find(j.CallExpression)
+    .filter(({node}) => node.callee.type === 'Identifier')
+    .map(path => path.get('callee'))
+    .forEach(path => fixVariableInitializedToUnboundMethods(j, path));
 }
 
 function findPossibleUnboundIterateesAndCallbacks(j, root) {
@@ -234,6 +224,24 @@ function getNormalizedArgPos(args, argPos) {
     return args.length + argPos;
   }
   return argPos;
+}
+
+function fixVariableInitializedToUnboundMethods(j, path) {
+  // post-declaration, initialized variables
+  const initializationValues = j(path)
+    .closestScope()
+    .find(j.AssignmentExpression)
+    .filter(({node}) => node.left.type === 'Identifier' && node.left.name === path.node.name)
+    .map(assignmentPath => assignmentPath.get('right'));
+  replaceUnboundMethodsWithBoundMethods(j, initializationValues);
+
+  // variable declarators with initialization
+  const variableDeclaratorInitValues = j(path)
+    .closestScope()
+    .find(j.VariableDeclarator)
+    .filter(({node}) => node.id.type === 'Identifier' && node.id.name === path.node.name)
+    .map(declaratorPath => declaratorPath.get('init'));
+  replaceUnboundMethodsWithBoundMethods(j, variableDeclaratorInitValues);
 }
 
 function replaceUnboundMethodsWithBoundMethods(j, collection) {

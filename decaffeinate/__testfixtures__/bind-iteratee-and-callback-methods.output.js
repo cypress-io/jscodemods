@@ -91,6 +91,18 @@ class SyncService {
     }
     return xs.map(doWork);
   }
+  test6(x) {
+    let doWork;
+    if (Math.random() > 0.5) {
+      doWork = syncUtil.multiply.bind(syncUtil);
+    } else {
+      doWork = syncUtil.divide.bind(syncUtil);
+    }
+    return doWork(x);
+  }
+  test7(doWork, x) {
+    return doWork(x);
+  }
   doWork(x) {
     return this.workerFunction(x);
   }
