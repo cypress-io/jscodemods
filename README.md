@@ -177,6 +177,94 @@ describe('SearchListService', () => {
 });
 ```
 
+### `bind-iteratee-and-callback-methods`
+
+NOTE: Works with common `Array.prototype`, underscore `_`, `async`, and `StreamWorker` functions.
+Does not work with tasks in `async` control flow functions.
+
+#### CoffeeScript Source
+
+```coffeescript
+class MultiplierService
+  constructor: ->
+    this.multiplier = 42
+  # Originally a bound method:
+  #   multiply: (x) =>
+  multiply: (x) ->
+    return x * @multiplier
+  multiplyAll: (xs) ->
+    return xs.map(@multiply)
+
+xs = [1, 2, 3]
+ms = new MultiplierService()
+
+# Direct usage
+xs.map(ms.multiply)
+
+# Assigning to a variable prior to usage
+doWork = ms.multiply
+xs.map(multiply)
+multiply(1)
+```
+
+#### Decaffeinated JavaScript
+
+```javascript
+class MultiplierService {
+  constructor() {
+    this.multiplier = 42;
+  }
+  // Originally a bound method:
+  //   multiply: (x) =>
+  multiply(x) {
+    return x * this.multiplier;
+  }
+  multiplyAll(xs) {
+    return xs.map(this.multiply);
+  }
+}
+
+const xs = [1, 2, 3];
+const ms = new MultiplierService();
+
+// Direct usage
+xs.map(ms.multiply);
+
+// Assigning to a variable prior to usage
+const doWork = ms.multiply;
+xs.map(doWork);
+doWork(1);
+```
+
+#### Fixed JavaScript
+
+```javascript
+class MultiplierService {
+  constructor() {
+    this.multiplier = 42;
+  }
+  // Originally a bound method:
+  //   multiply: (x) =>
+  multiply(x) {
+    return x * this.multiplier;
+  }
+  multiplyAll(xs) {
+    return xs.map(this.multiply.bind(this));
+  }
+}
+
+const xs = [1, 2, 3];
+const ms = new MultiplierService();
+
+// Direct usage
+xs.map(ms.multiply.bind(ms));
+
+// Assigning to a variable prior to usage
+const doWork = ms.multiply.bind(ms);
+xs.map(doWork);
+doWork(1);
+```
+
 ## `ember-styleguide`
 
 Tranformation scripts in the `ember-styleguide` directory are scripts meant to be run on ES6 ember-cli code.
