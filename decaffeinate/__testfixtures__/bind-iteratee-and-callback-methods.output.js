@@ -69,7 +69,7 @@ class SyncService {
     return xs.map(doWork);
   }
   test1(xs) {
-    return xs.map(this.doWork.apply(this));
+    return xs.map(this.doWork.bind(this));
   }
   test2(xs) {
     return xs.map(syncUtil.multipy.bind(syncUtil));
