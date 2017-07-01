@@ -196,8 +196,8 @@ function findPossibleUnboundIterateesAndCallbacks(j, root) {
       const match = HIGHER_ORDER_FUNCTIONS.find(([fn, argPos]) => {
         const arg = getArg(args, argPos);
         return fn.test(calleeSource) && (
-          arg.type === 'MemberExpression' ||
-          arg.type === 'Identifier'
+          (arg && arg.type === 'MemberExpression') ||
+          (arg && arg.type === 'Identifier')
         );
       });
       if (match) {
