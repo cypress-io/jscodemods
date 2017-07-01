@@ -179,8 +179,11 @@ describe('SearchListService', () => {
 
 ### `bind-iteratee-and-callback-methods`
 
-NOTE: Works with common `Array.prototype`, underscore `_`, `async`, and `StreamWorker` functions.
+Works with common `Array.prototype`, underscore `_`, `async`, and `StreamWorker` functions.
 Does not work with tasks in `async` control flow functions.
+
+**NOTE**: This assumes that you have unbound all your bound methods prior to running this transform.
+You can do so by running `find . -name "*.coffee" | xargs perl -pi -e 's/^(  \w+:.*)=>$/\1->/g'` on all your CoffeeScript source files.
 
 #### CoffeeScript Source
 
