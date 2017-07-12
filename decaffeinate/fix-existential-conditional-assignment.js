@@ -26,7 +26,11 @@ function isCoffeeScriptExistentialOperator({value}) {
   const assignmentExpression = testExpression.left;
   const isAssigningLeftVariable = assignmentExpression.left.type === 'Identifier' && LEFT_IDENTIFIER_REGEX.test(assignmentExpression.left.name);
 
-  const isNullTest = testExpression.right.type === 'Literal' && testExpression.right.raw === 'null';
+  const isNullTest = (
+    testExpression.right.type === 'Literal' &&
+    testExpression.operator === '!=' &&
+    testExpression.right.raw === 'null'
+  );
 
   return isAssigningLeftVariable && isNullTest;
 }
