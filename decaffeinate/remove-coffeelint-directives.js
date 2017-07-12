@@ -1,8 +1,10 @@
+'use strict';
+
 module.exports = function removeCoffeeLintDirectives(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
-  
+
   let commentsRemoved = false;
   root.find(j.Node).forEach(({value}) => {
     const {comments} = value;
@@ -17,5 +19,5 @@ module.exports = function removeCoffeeLintDirectives(fileInfo, api) {
   });
 
   if (!commentsRemoved) return;
-  return root.toSource();
+  return root.toSource(); // eslint-disable-line consistent-return
 };

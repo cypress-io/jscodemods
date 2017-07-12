@@ -1,4 +1,6 @@
-export default function fixClassAssignmentWithConstructors(fileInfo, api) {
+'use strict';
+
+module.exports = function fixClassAssignmentWithConstructors(fileInfo, api) {
   const j = api.jscodeshift;
   const root = j(fileInfo.source);
 
@@ -8,7 +10,7 @@ export default function fixClassAssignmentWithConstructors(fileInfo, api) {
     .forEach(path => transformClassAssignmentAndConstructions(j, root, path));
 
   return root.toSource().replace(/\(?START_(.*)_END\)?/g, '$1');
-}
+};
 
 function isClassAssign(path) {
   return path.value.right.type === 'ClassExpression';
@@ -27,7 +29,7 @@ function transformClassAssignmentAndConstructions(j, root, assignmentPath) {
     });
     // Move class definition above module.exports assignment
     const assignmentExpressionStatement = assignmentPath.parent;
-    const classDefExpressionStatement = j.expressionStatement(classDef) 
+    const classDefExpressionStatement = j.expressionStatement(classDef);
     assignmentExpressionStatement.insertBefore(classDefExpressionStatement);
     migrateComments(assignmentExpressionStatement.value, classDefExpressionStatement.expression);
     // Replace module.exports = (class ClassName {}); with module.exports = ClassName;

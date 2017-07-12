@@ -4,9 +4,11 @@
  * assignment at the end of a function body, which is equivalent to no return.
  */
 
+'use strict';
+
 const assert = require('assert');
 
-module.exports = function transform(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
@@ -21,7 +23,7 @@ module.exports = function transform(fileInfo, api, options) {
 
 function isImplicitReturnOfAssignment(path) {
   const returnStatement = path.value;
-  const isReturningAnAssignment = returnStatement.argument && returnStatement.argument.type === "AssignmentExpression";
+  const isReturningAnAssignment = returnStatement.argument && returnStatement.argument.type === 'AssignmentExpression';
   return isReturningAnAssignment && isLastStatement(path);
 }
 

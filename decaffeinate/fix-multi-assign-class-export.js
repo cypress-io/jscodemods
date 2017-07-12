@@ -1,26 +1,28 @@
 /**
  * Running decaffeinate when you have a statement like:
  *  module.exports = class Foo
- * 
+ *
  * results in:
  *  let Foo;
  *  module.exports = Foo = class Foo {};
- * 
+ *
  * The extra variable declaration is not necessary, and
  * it causes eslint no-multi-assign to fail.
- * 
+ *
  * This transformation converts the decaffeniated javascript to remove the
  * variable declaration and the subsequent multi-assign.
  */
 
+'use strict';
+
 const assert = require('assert');
 
-module.exports = function transform(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
 
-  const { comments } = root.find(j.Program).get('body', 0).node;
+  const {comments} = root.find(j.Program).get('body', 0).node;
 
   const multiAssignClassExports = findMultiAssignClassExports(j, root);
   if (multiAssignClassExports.length === 0) return;
@@ -34,7 +36,7 @@ module.exports = function transform(fileInfo, api, options) {
 
   // Retain leading comments
   root.get().node.comments = comments;
-  return root.toSource();
+  return root.toSource(); // eslint-disable-line consistent-return
 };
 
 function findMultiAssignClassExports(j, root) {
@@ -57,7 +59,7 @@ function findMultiAssignClassExports(j, root) {
 function fixMultiAssignExport(j, root, value) {
   const classIdentifier = value.right.right.id.name;
   // Removes the intermediary assignment
-  value.right = value.right.right;
+  value.right = value.right.right; // eslint-disable-line no-param-reassign
   return removeVariableDeclarationForIdentifier(j, root, classIdentifier);
 }
 

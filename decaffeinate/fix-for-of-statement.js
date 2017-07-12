@@ -1,8 +1,10 @@
+'use strict';
+
 const assert = require('assert');
 
 const FAKE_PARAM_NAME = 'FAKE_PARAM';
 
-module.exports = function transform(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);

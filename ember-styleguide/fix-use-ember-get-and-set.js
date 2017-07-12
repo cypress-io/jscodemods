@@ -24,6 +24,8 @@
  *  });
  */
 
+'use strict';
+
 const utils = require('./utils');
 
 const AVOIDED_PROPERTIES = [
@@ -52,7 +54,7 @@ module.exports = function fixLocalModules(fileInfo, api) {
 
   utils.upsertLocalModuleDeclaration(j, root, emberModuleNames);
 
-  return root.toSource();
+  return root.toSource(); // eslint-disable-line consistent-return
 };
 
 function isEmberGetSetCall(path) {

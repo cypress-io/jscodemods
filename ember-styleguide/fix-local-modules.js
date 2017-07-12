@@ -18,6 +18,8 @@
  *  });
  */
 
+'use strict';
+
 const utils = require('./utils');
 
 module.exports = function fixLocalModules(fileInfo, api) {
@@ -39,7 +41,7 @@ module.exports = function fixLocalModules(fileInfo, api) {
   // Add declaration `const {get, set} = Ember;`
   utils.upsertLocalModuleDeclaration(j, root, emberModuleNames);
 
-  return root.toSource();
+  return root.toSource(); // eslint-disable-line consistent-return
 };
 
 function isEmberModule(path) {

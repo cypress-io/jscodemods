@@ -1,3 +1,5 @@
+'use strict';
+
 module.exports = (file, api, options) => {
   const j = api.jscodeshift;
 
@@ -13,6 +15,7 @@ module.exports = (file, api, options) => {
     );
 
   const withComments = (to, from) => {
+    // eslint-disable-next-line no-param-reassign
     to.comments = from.comments;
     return to;
   };

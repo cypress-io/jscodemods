@@ -146,7 +146,7 @@ ASYNC_COLLECTION_FUNCTIONS.forEach((pairs) => {
 // for performance
 const EARLY_BAIL_PATTERN = /(_\.|async|StreamWorker|every|map|filter|find|forEach|map|reduce|some|sort)/i;
 
-module.exports = function transform(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
@@ -161,7 +161,7 @@ module.exports = function transform(fileInfo, api, options) {
     const currentSource = root.toSource();
     hasChanged = currentSource !== lastSource;
     lastSource = currentSource;
-  } while (hasChanged && ++currentIteration < MAX_TRANSFORM_ITERATIONS);
+  } while (hasChanged && ++currentIteration < MAX_TRANSFORM_ITERATIONS); // eslint-disable-line no-plusplus
 
   return root.toSource();
 };

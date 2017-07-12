@@ -1,6 +1,8 @@
+'use strict';
+
 const LEFT_IDENTIFIER_REGEX = /^left\d*/;
 
-module.exports = function transform(fileInfo, api, options) {
+module.exports = function transform(fileInfo, api) {
   const src = fileInfo.source;
   const j = api.jscodeshift;
   const root = j(src);
@@ -26,7 +28,7 @@ function isCoffeeScriptExistentialOperator({value}) {
 
   const isNullTest = testExpression.right.type === 'Literal' && testExpression.right.raw === 'null';
 
-  return isAssigningLeftVariable;
+  return isAssigningLeftVariable && isNullTest;
 }
 
 function replaceExistentialAssignmentWithLogicalOr(j, {value}) {
