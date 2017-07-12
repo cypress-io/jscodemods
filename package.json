@@ -2,6 +2,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "jest --bail",
+    "test:watch": "jest --bail --watchAll",
     "precommit": "lint-staged",
     "prepush": "npm run lint && npm run test"
   },
