@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 
-module.exports.upsertLocalModuleDeclaration = (j, root, newModuleNames) => {
+module.exports.upsertLocalModuleDeclaration = function (j, root, newModuleNames) {
   const existingLocalModuleDeclaration = findLocalModuleDeclaration(j, root);
   // Add declaration `const {get, set} = Ember;`
   const existingModuleNames = getModuleNamesFromLocalModuleDeclaration(existingLocalModuleDeclaration);
@@ -20,7 +20,7 @@ module.exports.upsertLocalModuleDeclaration = (j, root, newModuleNames) => {
   }
 };
 
-module.exports.uniqueAndSort = (strings) => {
+module.exports.uniqueAndSort = function (strings) {
   const uniqueStrings = Array.from(new Set(strings));
   const sortedStrings = uniqueStrings.sort();
   return sortedStrings;
