@@ -1,4 +1,6 @@
 {
+  "name": "jscodemods",
+  "version": "0.0.0",
   "scripts": {
     "lint": "eslint .",
     "test": "jest --bail",
